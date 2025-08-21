@@ -20,7 +20,7 @@
 pip install -r requirements.txt
 
 # 启动服务器
-python server.py
+python start_server.py
 ```
 
 ### 客户端连接
@@ -34,6 +34,8 @@ telnet localhost 2323
 - `LOOK` - 查看当前房间
 - `GO N/S/E/W` - 移动方向
 - `SAY <内容>` - 房间内发言
+- `TELL <玩家名> <内容>` - 私聊
+- `JOIN <频道名>` - 加入频道
 - `WHO` - 查看在线玩家
 - `HELP` - 获取帮助
 
@@ -47,17 +49,73 @@ teletype_city/
 ├── world/             # 游戏世界
 ├── systems/           # 游戏系统
 ├── data/              # 游戏数据
-└── persist/           # 数据持久化
+├── persist/           # 数据持久化
+├── start_server.py    # 服务器启动脚本
+├── test_*.py          # 测试脚本
+├── Dockerfile         # Docker容器配置
+├── docker-compose.yml # Docker编排配置
+└── Makefile           # 自动化构建脚本
 ```
 
 ## 开发状态
 
+### ✅ 已完成
 - [x] 项目架构设计
-- [ ] 核心服务器框架
-- [ ] 世界系统
-- [ ] 玩家系统
-- [ ] 任务系统
-- [ ] 战斗系统
-- [ ] 社交系统
-- [ ] 数据持久化
+- [x] 核心服务器框架
+- [x] 世界系统（9个房间，5个NPC，17件物品，10个任务）
+- [x] 玩家系统（登录、移动、状态管理）
+- [x] 聊天系统（房间聊天、私聊、频道聊天）
+- [x] 基础命令系统（LOOK、GO、SAY、TELL、WHO、HELP等）
+- [x] 数据持久化（玩家数据保存/加载）
+- [x] Docker容器化部署
+- [x] 测试框架和脚本
+
+### 🔄 进行中
+- [ ] 任务系统完善
+- [ ] 战斗系统开发
+- [ ] 经济系统实现
+
+### 📋 待开发
+- [ ] 物品使用和装备系统
+- [ ] 技能系统
+- [ ] 公会/组织系统
+- [ ] 排行榜系统
+- [ ] 管理员工具
 - [ ] 客户端优化
+
+## Docker部署
+
+```bash
+# 构建镜像
+make build
+
+# 运行容器
+make run
+
+# 查看日志
+make logs
+
+# 停止服务
+make stop
+```
+
+## 测试
+
+```bash
+# 基础功能测试
+python3 test_basic.py
+
+# 聊天功能测试
+python3 test_all_chat.py
+
+# Telnet客户端测试
+python3 test_telnet.py
+```
+
+## 贡献
+
+欢迎提交Issue和Pull Request！
+
+## 许可证
+
+MIT License
