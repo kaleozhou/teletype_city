@@ -1,13 +1,2 @@
-asyncio
-pyyaml
-colorama
-curses
-sqlite3
-logging
-json
-time
-random
-hashlib
-os
-sys
-signal
+pyyaml>=6.0
+colorama>=0.4.6
