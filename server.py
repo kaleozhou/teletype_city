@@ -40,7 +40,7 @@ class GameServer:
         self.storage = StorageManager()
         self.world = WorldManager()
         self.players = PlayerManager()
-        self.chat = ChatManager()
+        self.chat = ChatManager(self)
         
         # 初始化命令处理器
         from commands import CommandHandler

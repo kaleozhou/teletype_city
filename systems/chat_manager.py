@@ -13,18 +13,17 @@ from typing import Dict, List, Set, Optional
 logger = logging.getLogger(__name__)
 
 class ChatManager:
-    def __init__(self):
-        self.channels: Dict[str, Channel] = {}
-        self.global_channel = Channel("#global", "全服频道")
-        self.channels["#global"] = self.global_channel
+    def __init__(self, server):
+        self.server = server
+        logger.info(f"ChatManager初始化，server: {server}")
+        logger.info(f"server类型: {type(server)}")
+        logger.info(f"server属性: {dir(server) if server else 'None'}")
         
-        # 消息历史
+        self.channels = {}  # 频道名称 -> Channel对象
+        self.chat_cooldown_time = 1.0  # 聊天冷却时间（秒）
+        self.chat_cooldowns = {}  # 玩家名 -> 下次可聊天时间
+        self.max_history = 100  # 最大历史记录数量
         self.message_history: List[Message] = []
-        self.max_history = 1000
-        
-        # 聊天冷却
-        self.chat_cooldowns: Dict[str, float] = {}
-        self.chat_cooldown_time = 1.0  # 1秒冷却
     
     async def tick(self):
         """聊天系统tick更新"""
@@ -39,8 +38,8 @@ class ChatManager:
             del self.chat_cooldowns[player_id]
     
     async def send_room_message(self, player, message: str):
-        """发送房间内消息"""
-        if not player or not player.current_room:
+        """发送房间消息"""
+        if not player:
             return False
         
         # 检查聊天冷却
@@ -78,7 +77,7 @@ class ChatManager:
             sender=player.name,
             content=message,
             type="global",
-            target="#global"
+            target="global"
         )
         
         # 添加到历史记录
@@ -143,19 +142,22 @@ class ChatManager:
         return True
     
     async def leave_channel(self, player, channel_name: str):
-        """加入频道"""
+        """离开频道"""
         if not player:
             return False
         
-        # 创建频道（如果不存在）
         if channel_name not in self.channels:
-            self.channels[channel_name] = Channel(channel_name, f"频道 {channel_name}")
+            await player.protocol.send_message("ERR", f"频道 {channel_name} 不存在")
+            return False
         
         channel = self.channels[channel_name]
-        channel.add_member(player)
+        if player not in channel.members:
+            await player.protocol.send_message("ERR", f"你不在频道 {channel_name} 中")
+            return False
         
-        await player.protocol.send_message("OK", f"已加入频道 {channel_name}")
-        logger.info(f"玩家 {player.name} 加入频道 {channel_name}")
+        channel.remove_member(player)
+        await player.protocol.send_message("OK", f"已离开频道 {channel_name}")
+        logger.info(f"玩家 {player.name} 离开频道 {channel_name}")
         return True
     
     async def send_channel_message(self, player, channel_name: str, message: str):
@@ -209,15 +211,53 @@ class ChatManager:
     
     async def _broadcast_to_room(self, room_name: str, message: 'Message', exclude: str = None):
         """广播消息到房间"""
-        # 这里需要从世界管理器获取房间内的玩家
-        # 暂时使用简单的实现
-        pass
+        try:
+            logger.debug(f"开始广播房间消息到 {room_name}")
+            
+            # 直接访问player_manager
+            if not hasattr(self.server, 'players'):
+                logger.error("服务器没有players属性")
+                return
+            
+            # 获取房间内的所有玩家
+            online_players = self.server.players.get_online_players()
+            logger.debug(f"在线玩家数量: {len(online_players)}")
+            
+            room_players = [p for p in online_players if p.current_room == room_name and p.name != exclude]
+            logger.debug(f"房间 {room_name} 中的玩家: {[p.name for p in room_players]}")
+            
+            if not room_players:
+                logger.warning(f"房间 {room_name} 中没有其他玩家")
+                return
+            
+            # 广播给房间内的所有玩家
+            for player in room_players:
+                try:
+                    await player.protocol.send_message("SEEN", f"{message.sender}: {message.content}")
+                    logger.debug(f"房间消息已发送给 {player.name}")
+                except Exception as e:
+                    logger.error(f"房间广播失败: {e}")
+            
+            logger.info(f"房间 {room_name} 消息已广播给 {len(room_players)} 个玩家")
+            
+        except Exception as e:
+            logger.error(f"房间广播过程中发生异常: {e}")
+            import traceback
+            logger.error(f"异常堆栈: {traceback.format_exc()}")
     
     async def _broadcast_to_global(self, message: 'Message', exclude: str = None):
         """广播消息到全服"""
-        # 这里需要从玩家管理器获取所有在线玩家
-        # 暂时使用简单的实现
-        pass
+        if not hasattr(self.server, 'player_manager'):
+            return
+        
+        # 获取所有在线玩家
+        online_players = self.server.player_manager.get_online_players()
+        for player in online_players:
+            if player.name != exclude:
+                try:
+                    await player.protocol.send_message("SEEN", f"[全服] {message.sender}: {message.content}")
+                except Exception as e:
+                    logger.error(f"全服广播失败: {e}")
     
     async def _broadcast_to_channel(self, channel_name: str, message: 'Message', exclude: str = None):
         """广播消息到频道"""
@@ -234,9 +274,11 @@ class ChatManager:
     
     def _find_player_by_name(self, name: str):
         """根据名字查找玩家"""
-        # 这里需要从玩家管理器查找
-        # 暂时返回None
-        return None
+        if not hasattr(self.server, 'players'):
+            return None
+        
+        # 从玩家管理器查找玩家
+        return self.server.players.get_player(name)
 
 class Channel:
     def __init__(self, name: str, description: str):

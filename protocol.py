@@ -134,7 +134,11 @@ class GameProtocol:
             elif msg_type == "SEEN":
                 player_name = kwargs.get('player_name', '')
                 action = kwargs.get('action', '')
-                message = f"SEEN {player_name} {action}"
+                if player_name and action:
+                    message = f"SEEN {player_name} {action}"
+                else:
+                    # 如果没有player_name和action，直接使用content
+                    message = f"SEEN {content}"
             elif msg_type == "LIST":
                 items = kwargs.get('items', [])
                 message = f"LIST {' '.join(items)}"
