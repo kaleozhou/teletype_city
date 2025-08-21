@@ -1,0 +1,136 @@
+# 游戏任务数据
+- id: q_intro_tape
+  name: 初识电报
+  desc: "找到遗落的纸带，带去电传机房的技师处。"
+  type: main
+  steps:
+    - collect: {item: paper_tape, count: 1}
+    - talk: {npc: mechanic}
+  reward:
+    items: [{id: pouch_small, count: 1}]
+    money: 20
+    title: 报童
+    exp: 50
+  repeatable: false
+
+- id: q_decode_messages
+  name: 解码讯息
+  desc: "使用解码器解读更多的电传讯息。"
+  type: daily
+  steps:
+    - collect: {item: paper_tape, count: 3}
+    - use: {item: decoder}
+  reward:
+    items: [{id: scrap, count: 5}]
+    money: 15
+    exp: 30
+  repeatable: true
+
+- id: q_collect_fish
+  name: 收集海鱼
+  desc: "为集市商人收集新鲜的海鱼。"
+  type: daily
+  steps:
+    - collect: {item: fish, count: 5}
+    - deliver: {npc: merchant, item: fish, count: 5}
+  reward:
+    items: [{id: lantern, count: 1}]
+    money: 25
+    exp: 40
+  repeatable: true
+
+- id: q_gather_herbs
+  name: 采集草药
+  desc: "在暗巷和海滩采集各种草药。"
+  type: daily
+  steps:
+    - collect: {item: herbs, count: 10}
+    - deliver: {npc: merchant, item: herbs, count: 10}
+  reward:
+    items: [{id: potion, count: 2}]
+    money: 20
+    exp: 35
+  repeatable: true
+
+- id: q_find_treasure
+  name: 寻找宝藏
+  desc: "在杂货店主的指引下寻找隐藏的宝藏。"
+  type: side
+  steps:
+    - talk: {npc: shopkeeper}
+    - explore: {room: sewer}
+    - collect: {item: jewelry, count: 1}
+    - deliver: {npc: shopkeeper, item: jewelry, count: 1}
+  reward:
+    items: [{id: sword, count: 1}]
+    money: 100
+    exp: 80
+  repeatable: false
+
+- id: q_deliver_package
+  name: 递送包裹
+  desc: "为杂货店主递送一个神秘的包裹。"
+  type: side
+  steps:
+    - talk: {npc: shopkeeper}
+    - deliver: {npc: mechanic, item: package, count: 1}
+  reward:
+    items: [{id: armor, count: 1}]
+    money: 75
+    exp: 60
+  repeatable: false
+
+- id: q_catch_rare_fish
+  name: 钓取稀有鱼
+  desc: "在老渔夫的指导下钓取稀有的鱼类。"
+  type: weekly
+  steps:
+    - talk: {npc: fisherman}
+    - fish: {count: 1, rarity: rare}
+    - deliver: {npc: fisherman, item: rare_fish, count: 1}
+  reward:
+    items: [{id: pearls, count: 3}]
+    money: 150
+    exp: 100
+  repeatable: true
+
+- id: q_find_shipwreck
+  name: 寻找沉船
+  desc: "探索海滩，寻找传说中的沉船遗迹。"
+  type: event
+  steps:
+    - explore: {room: beach}
+    - collect: {item: shipwreck_artifact, count: 1}
+  reward:
+    items: [{id: antiques, count: 1}]
+    money: 200
+    exp: 150
+  repeatable: false
+
+- id: q_maintain_order
+  name: 维护秩序
+  desc: "协助城市守卫维护电传之城的秩序。"
+  type: daily
+  steps:
+    - defeat: {monster: thug, count: 3}
+    - report: {npc: guard}
+  reward:
+    items: [{id: license, count: 1}]
+    money: 50
+    exp: 60
+  repeatable: true
+
+- id: q_investigate_crime
+  name: 调查犯罪
+  desc: "帮助守卫调查一起神秘的犯罪案件。"
+  type: weekly
+  steps:
+    - talk: {npc: guard}
+    - investigate: {room: alley}
+    - collect: {item: evidence, count: 1}
+    - deliver: {npc: guard, item: evidence, count: 1}
+  reward:
+    items: [{id: protection, count: 1}]
+    money: 300
+    exp: 200
+  repeatable: false

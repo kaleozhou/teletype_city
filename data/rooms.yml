@@ -1,0 +1,86 @@
+# 游戏世界房间数据
+- id: dock
+  title: 老码头
+  desc: |
+    潮湿的木板甲板，旧时代的钟声依稀可闻。
+    海风裹挟着盐味，远处传来汽笛声。
+    这里是你的起点，寻找遗落的电报纸带。
+  pos: [0, 0]
+  exits: {N: lighthouse, E: teletype, S: market, W: alley}
+  on_enter:
+    - say: "海风裹挟着盐味，远处传来汽笛声。"
+  items: [paper_tape]
+
+- id: teletype
+  title: 电传机房
+  desc: |
+    噼啪作响的继电器，让人想起 BBS 的岁月。
+    机房技师正在调试设备，等待你的到来。
+  pos: [1, 0]
+  exits: {W: dock}
+  npcs: [mechanic]
+
+- id: market
+  title: 集市
+  desc: |
+    热闹的集市，各种摊位林立。
+    玩家们在这里交易、聊天，分享冒险故事。
+  pos: [0, -1]
+  exits: {N: dock, E: board, W: shop}
+  npcs: [merchant]
+
+- id: lighthouse
+  title: 灯塔下
+  desc: |
+    高耸的灯塔，守护着这座港口城市。
+    整点时分，灯塔会鸣笛，带来特殊事件。
+  pos: [0, 1]
+  exits: {S: dock, E: beach}
+  on_enter:
+    - say: "灯塔的光芒照亮了海面。"
+
+- id: alley
+  title: 暗巷
+  desc: |
+    狭窄的暗巷，有些危险但充满机遇。
+    小心那些游荡的怪物。
+  pos: [-1, 0]
+  exits: {E: dock, S: sewer}
+  monsters: [rat, thug]
+
+- id: board
+  title: 公告板
+  desc: |
+    木制的公告板，贴满了各种任务和消息。
+    玩家可以在这里发布和查看信息。
+  pos: [1, -1]
+  exits: {W: market}
+  features: [message_board]
+
+- id: shop
+  title: 杂货店
+  desc: |
+    老旧的杂货店，出售各种物品和装备。
+    店主是个和蔼的老人。
+  pos: [-1, -1]
+  exits: {E: market}
+  npcs: [shopkeeper]
+
+- id: beach
+  title: 海滩
+  desc: |
+    宁静的海滩，细沙如银。
+    偶尔会有稀有物品被海浪冲上岸。
+  pos: [1, 1]
+  exits: {W: lighthouse}
+  features: [fishing, treasure_hunting]
+
+- id: sewer
+  title: 地下水道
+  desc: |
+    阴暗潮湿的地下水道。
+    这里隐藏着一些秘密，但也充满危险。
+  pos: [-1, -1]
+  exits: {N: alley}
+  monsters: [rat, slime]
+  features: [exploration]

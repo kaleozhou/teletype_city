@@ -1,0 +1,154 @@
+# 游戏物品数据
+- id: paper_tape
+  name: 纸带
+  type: material
+  desc: "打孔纸带，上面是无法辨识的讯息。"
+  value: 5
+  weight: 0.1
+  stackable: true
+  max_stack: 10
+
+- id: decoder
+  name: 解码器
+  type: tool
+  desc: "小巧的解码设备，可以解读电传讯息。"
+  value: 15
+  weight: 0.5
+  stackable: false
+  durability: 100
+
+- id: pouch_small
+  name: 帆布小袋
+  type: bag
+  desc: "实用的帆布小袋，可以携带更多物品。"
+  value: 10
+  weight: 0.3
+  stackable: false
+  slots: 6
+
+- id: lantern
+  name: 油灯
+  type: tool
+  desc: "老式的油灯，在黑暗中提供光明。"
+  value: 8
+  weight: 1.0
+  stackable: false
+  durability: 50
+
+- id: sword
+  name: 铁剑
+  type: weapon
+  desc: "普通的铁剑，适合新手冒险者。"
+  value: 30
+  weight: 2.0
+  stackable: false
+  damage: 15
+  durability: 100
+
+- id: armor
+  name: 皮甲
+  type: armor
+  desc: "轻便的皮甲，提供基本防护。"
+  value: 50
+  weight: 3.0
+  stackable: false
+  defense: 10
+  durability: 80
+
+- id: potion
+  name: 治疗药水
+  type: consumable
+  desc: "红色的药水，可以恢复生命值。"
+  value: 12
+  weight: 0.2
+  stackable: true
+  max_stack: 5
+  effect: "heal_20"
+
+- id: fish
+  name: 海鱼
+  type: material
+  desc: "新鲜的海鱼，可以食用或出售。"
+  value: 2
+  weight: 0.5
+  stackable: true
+  max_stack: 20
+
+- id: scrap
+  name: 废料
+  type: material
+  desc: "各种金属废料，可以回收利用。"
+  value: 1
+  weight: 0.3
+  stackable: true
+  max_stack: 50
+
+- id: herbs
+  name: 草药
+  type: material
+  desc: "采集的草药，可以制作药水。"
+  value: 1
+  weight: 0.1
+  stackable: true
+  max_stack: 30
+
+- id: jewelry
+  name: 珠宝
+  type: treasure
+  desc: "闪亮的珠宝，价值不菲。"
+  value: 25
+  weight: 0.1
+  stackable: true
+  max_stack: 10
+
+- id: antiques
+  name: 古董
+  type: treasure
+  desc: "古老的物品，收藏家会感兴趣。"
+  value: 40
+  weight: 1.0
+  stackable: false
+
+- id: fishing_rod
+  name: 钓鱼竿
+  type: tool
+  desc: "专业的钓鱼竿，提高钓鱼成功率。"
+  value: 20
+  weight: 1.5
+  stackable: false
+  durability: 100
+
+- id: bait
+  name: 鱼饵
+  type: consumable
+  desc: "新鲜的鱼饵，吸引鱼类上钩。"
+  value: 2
+  weight: 0.1
+  stackable: true
+  max_stack: 100
+
+- id: pearls
+  name: 珍珠
+  type: treasure
+  desc: "天然珍珠，美丽而珍贵。"
+  value: 60
+  weight: 0.05
+  stackable: true
+  max_stack: 20
+
+- id: license
+  name: 许可证
+  type: document
+  desc: "官方颁发的许可证，允许某些活动。"
+  value: 100
+  weight: 0.1
+  stackable: false
+
+- id: protection
+  name: 保护费
+  type: currency
+  desc: "支付给守卫的保护费，获得特殊待遇。"
+  value: 200
+  weight: 0.0
+  stackable: true
+  max_stack: 1000

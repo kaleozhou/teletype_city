@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  teletype-city:
+    build: .
+    container_name: teletype-city-server
+    ports:
+      - "2323:2323"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./backups:/app/backups
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GAME_PORT=2323
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; socket.socket().connect(('localhost', 2323))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - teletype-network
+
+  # 开发环境服务
+  teletype-city-dev:
+    build: .
+    container_name: teletype-city-dev
+    ports:
+      - "2324:2323"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./backups:/app/backups
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GAME_PORT=2323
+      - ENVIRONMENT=development
+    restart: unless-stopped
+    profiles:
+      - dev
+    networks:
+      - teletype-network
+
+  # 生产环境服务
+  teletype-city-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_ENV: production
+        VERSION: ${VERSION:-latest}
+    container_name: teletype-city-prod
+    ports:
+      - "2323:2323"
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+      - ./backups:/app/backups
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GAME_PORT=2323
+      - ENVIRONMENT=production
+    restart: unless-stopped
+    profiles:
+      - prod
+    networks:
+      - teletype-network
+
+  # 监控服务
+  teletype-monitor:
+    image: grafana/grafana:latest
+    container_name: teletype-monitor
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    restart: unless-stopped
+    profiles:
+      - monitoring
+    networks:
+      - teletype-network
+
+networks:
+  teletype-network:
+    driver: bridge
+
+volumes:
+  game-data:
+    driver: local
+  game-logs:
+    driver: local
+  game-backups:
+    driver: local

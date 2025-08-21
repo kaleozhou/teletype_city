@@ -1,0 +1,66 @@
+# 游戏NPC数据
+- id: mechanic
+  name: 机房技师
+  title: 电传专家
+  room: teletype
+  dialog:
+    greet: "有纸带就拿来，我给你解码。"
+    default: "需要什么帮助吗？"
+    quest_complete: "干得好！这是你的奖励。"
+  trade:
+    buy: {scrap: 3, paper_tape: 5}
+    sell: {decoder: 15, tool_kit: 25}
+  quests: [q_intro_tape, q_decode_messages]
+  inventory: [decoder, tool_kit, scrap]
+
+- id: merchant
+  name: 集市商人
+  title: 贸易专家
+  room: market
+  dialog:
+    greet: "欢迎来到集市！有什么想买的吗？"
+    default: "价格公道，童叟无欺。"
+  trade:
+    buy: {fish: 2, herbs: 1, scrap: 1}
+    sell: {pouch_small: 10, lantern: 8, rope: 5}
+  quests: [q_collect_fish, q_gather_herbs]
+  inventory: [pouch_small, lantern, rope, food, water]
+
+- id: shopkeeper
+  name: 杂货店主
+  title: 老店主
+  room: shop
+  dialog:
+    greet: "欢迎光临！需要什么装备吗？"
+    default: "我这里什么都有。"
+  trade:
+    buy: {jewelry: 10, antiques: 15}
+    sell: {sword: 30, armor: 50, potion: 12}
+  quests: [q_find_treasure, q_deliver_package]
+  inventory: [sword, armor, potion, shield, helmet]
+
+- id: fisherman
+  name: 老渔夫
+  title: 海钓专家
+  room: beach
+  dialog:
+    greet: "今天海况不错，适合钓鱼。"
+    default: "钓鱼需要耐心。"
+  trade:
+    buy: {fish: 3}
+    sell: {fishing_rod: 20, bait: 2}
+  quests: [q_catch_rare_fish, q_find_shipwreck]
+  inventory: [fishing_rod, bait, fish, pearls]
+
+- id: guard
+  name: 城市守卫
+  title: 治安官
+  room: dock
+  dialog:
+    greet: "欢迎来到电传之城，请遵守规则。"
+    default: "有什么需要帮助的吗？"
+  trade:
+    buy: {contraband: 50}
+    sell: {license: 100, protection: 200}
+  quests: [q_maintain_order, q_investigate_crime]
+  inventory: [license, protection, handcuffs]
